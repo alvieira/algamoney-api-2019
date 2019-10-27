@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import com.example.algamoney.api.repository.CategoriaRepository;
 
 @RestController
 @RequestMapping("/categorias")
+@CrossOrigin(maxAge = 10, origins = { "http://localhost:8000" })
 public class CategoriaResource {
 
 	private CategoriaRepository categoriaRepository;
@@ -31,7 +33,7 @@ public class CategoriaResource {
 		this.categoriaRepository = categoriaRepository;
 		this.eventPublisher = eventPublisher;
 	}
-
+	
 	@GetMapping
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
