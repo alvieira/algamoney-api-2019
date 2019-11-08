@@ -9,15 +9,24 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.algamoney.api.config.property.AlgamoneyApiProperty;
+
 @RestController
 @RequestMapping("/tokens")
 public class TokenResource {
-	
+
+	private AlgamoneyApiProperty algamoneyApiProperty;
+
+	public TokenResource(AlgamoneyApiProperty algamoneyApiProperty) {
+		super();
+		this.algamoneyApiProperty = algamoneyApiProperty;
+	}
+
 	@DeleteMapping("/revoke")
 	public void revoke(HttpServletRequest req, HttpServletResponse resp) {
 		Cookie cookie = new Cookie("refreshToken", null);
 		cookie.setHttpOnly(true);
-		cookie.setSecure(false); //TODO: em produção será true
+		cookie.setSecure(algamoneyApiProperty.getSeguranca().isEnablehttps());
 		cookie.setPath(req.getContextPath() + "/oauth/token");
 		cookie.setMaxAge(0);
 		

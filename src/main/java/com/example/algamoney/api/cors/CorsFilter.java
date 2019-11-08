@@ -14,11 +14,18 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.example.algamoney.api.config.property.AlgamoneyApiProperty;
+
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-	private String originPermitida = "http://localhost:8000";// TODO configurar para diferentes ambientes
+	private AlgamoneyApiProperty algamoneyApiProperty;
+
+	public CorsFilter(AlgamoneyApiProperty algamoneyApiProperty) {
+		super();
+		this.algamoneyApiProperty = algamoneyApiProperty;
+	}
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -27,10 +34,11 @@ public class CorsFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 
-		response.setHeader("Access-Control-Allow-Origin", originPermitida);
+		response.setHeader("Access-Control-Allow-Origin", algamoneyApiProperty.getOriginPermitida());
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 
-		if ("OPTIONS".equals(request.getMethod()) && originPermitida.equals(request.getHeader("Origin"))) {
+		if ("OPTIONS".equals(request.getMethod())
+				&& algamoneyApiProperty.getOriginPermitida().equals(request.getHeader("Origin"))) {
 			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 			response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-type, Accept");
 			response.setHeader("Access-Control-Max-Age", "3600");
